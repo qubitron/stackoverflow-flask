@@ -1,49 +1,20 @@
 
 ## Prerequisites
-To complete this tutorial:
+To use this demo app:
 
 - [Install Python 3](https://www.python.org/downloads/)
 - [Install Docker Community Edition](https://www.docker.com/community-edition)
 - (Optional) [Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest)
 
-## Create app and run it locally
+## Run locally
 
-First let's write our app paste the following code into ```main/app.py```:
-
-```python
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-  return 'Hello, World!'
-
-if __name__ == '__main__':
-  app.run()
+To build and run the docker container locally:
 ```
-
-Now let's create a dockerfile for the app, we'll use an Alpine Linux container with an NGINX web server. Put the following in a file named `Dockerfile`:
-
-```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
-
-ENV LISTEN_PORT=8000
-EXPOSE 8000
-
-COPY /app /app
-```
-
-Now build and run the docker container:
-```
-docker build --rm -t flask-quickstart .
-docker run --rm -it -p 8000:8000 flask-quickstart
+docker build --rm -t stackoverflow-flask .
+docker run --rm -it -p 8000:8000 stackoverflow-flask
 ```
 
 Open a web browser, and navigate to the sample app at ```http://localhost:8000.```
-
-You can see the Hello World message from the sample app displayed in the page.
-
-![Flask app running locally](https://docs.microsoft.com/en-us/azure/app-service/media/app-service-web-get-started-python/localhost-hello-world-in-browser.png)
 
 In your terminal window, press Ctrl+C to exit the web server and stop the container.
 
