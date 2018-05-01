@@ -35,17 +35,11 @@ questionNames = {
     2011: 'Which languages are you proficient in?',
 }
 
-def extractSurvey(year):
-    zipFilename = "data/survey" + str(year) + ".zip"
-    folder = "survey" + str(year)
-    with zipfile.ZipFile(zipFilename, "r") as zip:
-        zip.extractall(folder)
+def survey_csvname(year):
+    return 'survey{}.csv'.format(year)
 
-    print(folder)
-    shutil.move(folder + '/' + filenames[year], "survey" + str(year) + ".csv")
-    shutil.rmtree(folder)
-
-def downloadSurvey(year):
+def download_survey(year):
+    print("Downloading " + year)
     request = requests.get(urls[year])
     with open("survey.zip", "wb") as file:
         file.write(request.content) 
@@ -53,12 +47,15 @@ def downloadSurvey(year):
     with zipfile.ZipFile("survey.zip", "r") as file:
         file.extractall("data")
 
-    shutil.move("data/" + filenames[year], "survey{}.csv".format(year))
+    shutil.move("data/" + filenames[year], survey_csvname(year))
     shutil.rmtree("data", ignore_errors=True)
     os.remove("survey.zip")
 
-def languagesBreakdown(year):
-    data=pd.read_csv('survey{}.csv'.format(year), encoding='latin1')
+def languages_breakdown(year):
+    if not os.path.exists(survey_csvname(year)):
+        download_survey(year)
+    print("Processing " + str(year))
+    data=pd.read_csv(survey_csvname(year), encoding='latin1')
 
     if year >= 2016:
         # Languages are semicolon separated list in a single column
@@ -89,9 +86,9 @@ def languagesBreakdown(year):
     
     # total needs to account for all languages columns
     if year < 2016:
-        notNull = languages.apply(lambda x: pd.notnull(x)).sum(axis=1)
-        total = notNull[notNull > 0].shape[0]
-    
+        notnull = languages.apply(lambda x: pd.notnull(x)).sum(axis=1)
+        total = notnull[notnull > 0].shape[0]
+
     summary['percent'] = summary['count']/total*100
 
     return summary
@@ -99,12 +96,7 @@ def languagesBreakdown(year):
 if __name__ == "__main__":
     totals = {}
     for year in range(2011, 2018):
-        print("Downloading " + str(year))       
-        downloadSurvey(year)
-
-        print("Processing " + str(year))
-        totals[year] = languagesBreakdown(year).to_dict()
-        #os.remove('survey{}.csv'.format(year))
+        totals[year] = languages_breakdown(year).to_dict()
 
     with open('app/static/data.json', 'w') as file:
         file.write(json.dumps(totals, indent=4, separators=(',', ': ')))
