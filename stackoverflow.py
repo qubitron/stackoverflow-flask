@@ -39,7 +39,7 @@ def survey_csvname(year):
     return 'survey{}.csv'.format(year)
 
 def download_survey(year):
-    print("Downloading " + year)
+    print("Downloading " + str(year))
     request = requests.get(urls[year])
     with open("survey.zip", "wb") as file:
         file.write(request.content) 
@@ -82,12 +82,13 @@ def languages_breakdown(year):
     summary = languages.apply(pd.Series.value_counts)
     summary = pd.DataFrame({'count': summary.sum(axis=1).groupby(lambda x: x.strip()).sum()})
 
+    
     total = data[data[questionNames[year]].notnull()].shape[0]
     
-    # total needs to account for all languages columns
+    # total needs to account for all columns
     if year < 2016:
-        notnull = languages.apply(lambda x: pd.notnull(x)).sum(axis=1)
-        total = notnull[notnull > 0].shape[0]
+        notNull = languages.apply(lambda x: pd.notnull(x)).sum(axis=1)
+        total = notNull[notNull > 0].shape[0]
 
     summary['percent'] = summary['count']/total*100
 
