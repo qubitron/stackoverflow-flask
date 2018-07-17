@@ -8,10 +8,12 @@ To use this demo app:
 
 ## Run locally
 
+Add values to the the 'settings' variable in ```app/main.py``` 
+
 To build and run the docker container locally:
 ```
-docker build --rm -t stackoverflow-flask .
-docker run --rm -it -p 8000:8000 stackoverflow-flask
+docker build --rm --no-cache -t stackoverflow-flask .
+docker run --rm --no-cache -it -p 8000:8000 stackoverflow-flask
 ```
 
 Open a web browser, and navigate to the sample app at ```http://localhost:8000.```
