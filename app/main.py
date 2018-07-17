@@ -1,9 +1,8 @@
 
 import pydocumentdb.documents as documents
 import pydocumentdb.document_client as document_client
-import json
 
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 settings = {
