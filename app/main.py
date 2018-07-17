@@ -16,7 +16,6 @@ HOST = settings['host']
 MASTER_KEY = settings['master_key']
 DATABASE_ID = settings['database_id']
 COLLECTION_ID = settings['collection_id']
-DOCUMENT_NAME = 'languages'
 
 @app.route('/')
 def index():
@@ -26,8 +25,10 @@ def index():
 def get_data():
   client = document_client.DocumentClient(HOST, {'masterKey': MASTER_KEY} )
   collection_link = 'dbs/' + DATABASE_ID + '/colls/{0}'.format(COLLECTION_ID) 
-  query_string = "SELECT * FROM c WHERE c.id = " + '{0}'.format(DOCUMENT_NAME) 
+  # The document name is hard-coded
+  query_string = "SELECT * FROM c WHERE c.id = 'languages'"
   query = {'query': query_string}
+  print(query)
 
   document = list(client.QueryDocuments(collection_link, query)).pop()
   return jsonify(document)
