@@ -1,4 +1,3 @@
-
 import pydocumentdb.documents as documents
 import pydocumentdb.document_client as document_client
 
