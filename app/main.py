@@ -4,6 +4,7 @@ import pydocumentdb.document_client as document_client
 from flask import Flask, jsonify
 
 app = Flask(__name__)
+
 settings = {
     'host': '',
     'master_key': '',
@@ -14,6 +15,8 @@ settings = {
 HOST = settings['host']
 MASTER_KEY = settings['master_key']
 DATABASE_ID = settings['database_id']
+COLLECTION_ID = settings['collection_id']
+DOCUMENT_NAME = 'languages'
 
 @app.route('/')
 def index():
@@ -22,8 +25,9 @@ def index():
 @app.route('/api/data')
 def get_data():
   client = document_client.DocumentClient(HOST, {'masterKey': MASTER_KEY} )
-  collection_link = 'dbs/Tasks/colls/Survey Summary'
-  query = {'query': "SELECT * FROM c WHERE c.id = 'languages' "}
+  collection_link = 'dbs/' + DATABASE_ID + '/colls/{0}'.format(COLLECTION_ID) 
+  query_string = "SELECT * FROM c WHERE c.id = " + '{0}'.format(DOCUMENT_NAME) 
+  query = {'query': query_string}
 
   document = list(client.QueryDocuments(collection_link, query)).pop()
   return jsonify(document)
