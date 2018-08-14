@@ -1,0 +1,1 @@
+gunicorn app/main:app
