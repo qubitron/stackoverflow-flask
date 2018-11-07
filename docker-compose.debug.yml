@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  stackoverflow-flask:
+    image: stackoverflow-flask
+    build:
+      context: .
+      dockerfile: debug.Dockerfile
+    ports:
+      - 5000:5000
+      - 5678:5678

@@ -1,0 +1,9 @@
+version: '2.1'
+
+services:
+  stackoverflow-flask:
+    image: stackoverflow-flask
+    build: .
+    ports:
+      - 5000:5000
+      - 5678:5678
